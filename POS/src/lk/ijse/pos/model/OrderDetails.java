@@ -14,7 +14,7 @@ public class OrderDetails {
     private int qty;
     private BigDecimal unitPrice;
 
-    public OrderDetails() {
+    public OrderDetails(String string, String rstString, int anInt, double unitPrice) {
     }
 
     public OrderDetails(String orderId, String itemCode, int qty, BigDecimal unitPrice) {

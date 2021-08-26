@@ -6,6 +6,8 @@
 package lk.ijse.pos.model;
 
 
+import java.sql.Date;
+
 /**
  * @author : Sanu Vithanage
  * @since : 0.1.0
@@ -16,7 +18,7 @@ public class Customer {
     private String name;
     private String address;
 
-    public Customer() {
+    public Customer(String string, Date date, String rstString) {
     }
 
     public Customer(String cID, String name, String address) {
