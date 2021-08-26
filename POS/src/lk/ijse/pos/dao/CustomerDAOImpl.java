@@ -51,15 +51,15 @@ public class CustomerDAOImpl {
         return null;
 
     }
-    public ArrayList<Customer> getAllCustomer() throws Exception {
+    public ArrayList<Customer> getAllCustomers() throws Exception {
         Connection connection = DBConnection.getInstance().getConnection();
         Statement stm = connection.createStatement();
         ResultSet rst = stm.executeQuery("SELECT * FROM Customer");
-        ArrayList<Customer> allCustomers = new ArrayList<>();
+        ArrayList<Customer> alCustomers = new ArrayList<>();
         while (rst.next()) {
-            allCustomers.add(new Customer(rst.getString(1), rst.getString(2), rst.getString(3)));
+            Customer customer = new Customer(rst.getString(1), rst.getString(2), rst.getString(3));
+            alCustomers.add(customer);
         }
-        return allCustomers;
-
+        return alCustomers;
     }
 }
