@@ -161,12 +161,12 @@ public class OrderFormController implements Initializable {
                     Item item = itemDAO.searchItem(itemCode);
 
                     if (item != null) {
-
-                        String unitPrice = String.valueOf(item.getUnitPrice());
-                        String qtyOnHand = String.valueOf(item.getQtyOnHand());
-                        txtDescription.setText(item.getDescription());
-                        txtUnitPrice.setText(unitPrice);
-                        txtQtyOnHand.setText(qtyOnHand);
+                        String description = item.getDescription();
+                        double unitPrice = item.getUnitPrice().doubleValue();
+                        int qtyOnHand = item.getQtyOnHand();
+                        txtDescription.setText(description);
+                        txtUnitPrice.setText(unitPrice+"");
+                        txtQtyOnHand.setText(qtyOnHand+"");
                     }
                 } catch (SQLException ex) {
                     Logger.getLogger(OrderFormController.class.getName()).log(Level.SEVERE, null, ex);
