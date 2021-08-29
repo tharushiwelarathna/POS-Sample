@@ -20,10 +20,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import lk.ijse.pos.dao.CustomerDAOImpl;
-import lk.ijse.pos.dao.ItemDAOImpl;
-import lk.ijse.pos.dao.OrderDAOImpl;
-import lk.ijse.pos.dao.OrderDetailDAOImpl;
+import lk.ijse.pos.dao.impl.CustomerDAOImpl;
+import lk.ijse.pos.dao.impl.ItemDAOImpl;
+import lk.ijse.pos.dao.impl.OrderDAOImpl;
+import lk.ijse.pos.dao.impl.OrderDetailDAOImpl;
 import lk.ijse.pos.db.DBConnection;
 import lk.ijse.pos.model.Customer;
 import lk.ijse.pos.model.Item;
@@ -33,6 +33,7 @@ import lk.ijse.pos.view.tblmodel.OrderDetailTM;
 
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.*;
 import java.text.ParseException;
@@ -324,41 +325,46 @@ public class OrderFormController implements Initializable {
     private void btnPlaceOrderOnAction(ActionEvent event) {
         try {
             connection.setAutoCommit(false);
-            OrderDAOImpl orderDAO = new OrderDAOImpl();
-            boolean affectedRows = orderDAO.addOrder(new Orders(txtOrderID.getText(), parseDate(txtOrderDate.getEditor().getText()), cmbCustomerID.getSelectionModel().getSelectedItem()));
 
-            if (affectedRows) {
+            /*Add Order Record*/
+            OrderDAOImpl orderDAO = new OrderDAOImpl();
+            Orders orders = new Orders(txtOrderID.getText(),parseDate(txtOrderDate.getEditor().getText()),cmbCustomerID.getSelectionModel().getSelectedItem());
+            boolean b1 = orderDAO.addOrder(orders);
+            System.out.println("Order State :"+b1);
+            if (!b1) {
                 connection.rollback();
                 return;
             }
 
+            /*Add Order Details to the Table*/
+            OrderDetailDAOImpl orderDetailDAO = new OrderDetailDAOImpl();
+            for (OrderDetailTM orderDetailTM : olOrderDetails) {
 
+                OrderDetails orderDetails = new OrderDetails(
+                        txtOrderID.getText(),
+                        orderDetailTM.getItemCode(),
+                        orderDetailTM.getQty(),
+                        new BigDecimal(orderDetailTM.getUnitPrice()));
 
-            for (OrderDetailTM orderDetail : olOrderDetails) {
-
-
-
-                OrderDetailDAOImpl orderDetailDAO = new OrderDetailDAOImpl();
-                affectedRows = orderDetailDAO.addOrderDetail(new OrderDetails(txtOrderID.getText(),orderDetail.getItemCode(),orderDetail.getQty(),orderDetail.getUnitPrice()));
-
-                if (affectedRows ) {
+                boolean b2 = orderDetailDAO.addOrderDetails(orderDetails);
+                System.out.println("Order Details State :"+b2);
+                if (!b2) {
                     connection.rollback();
                     return;
                 }
+
                 int qtyOnHand = 0;
-
-
                 ItemDAOImpl itemDAO = new ItemDAOImpl();
-                Item item = itemDAO.searchItem(orderDetail.getItemCode());
-                if (item != null) {
+                Item item = itemDAO.searchItem(orderDetailTM.getItemCode());
+
+                if (item!=null) {
                     qtyOnHand = item.getQtyOnHand();
                 }
 
-//
-
-                affectedRows = itemDAO.updateQtyOnHand(orderDetail.getItemCode(), (qtyOnHand - orderDetail.getQty()));
-
-                if (affectedRows) {
+                ItemDAOImpl itemDAO1 = new ItemDAOImpl();
+                boolean b = itemDAO1.updateQtyOnHand(orderDetailTM.getItemCode(),qtyOnHand-orderDetailTM.getQty());
+                System.out.println("Item Qty Update State :"+b);
+                if (!b) {
                     connection.rollback();
                     return;
                 }
@@ -385,6 +391,7 @@ public class OrderFormController implements Initializable {
                 Logger.getLogger(OrderFormController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+
 
     }
 
