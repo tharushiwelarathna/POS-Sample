@@ -8,6 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class CustomerDAOImpl implements CustomerDAO {
+    @Override
     public boolean addCustomer(Customer customer) throws Exception {
         Connection connection = DBConnection.getInstance().getConnection();
 
@@ -20,7 +21,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         //pstm.setObject(4, 0);
         return pstm.executeUpdate()>0;
     }
-
+    @Override
     public boolean updateCustomer(Customer customer) throws Exception {
         Connection connection = DBConnection.getInstance().getConnection();
 
@@ -30,7 +31,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         pstm.setObject(3, customer.getcID());
         return pstm.executeUpdate()>0;
     }
-
+    @Override
     public boolean deleteCustomer(String id) throws Exception {
         Connection connection = DBConnection.getInstance().getConnection();
 
@@ -39,7 +40,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         return pstm.executeUpdate()>0;
 
     }
-
+    @Override
     public Customer searchCustomer(String id) throws Exception {
         String sql = "select * from Customer where id=?";
         Connection connection = DBConnection.getInstance().getConnection();
@@ -52,6 +53,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         return null;
 
     }
+    @Override
     public ArrayList<Customer> getAllCustomers() throws Exception {
         Connection connection = DBConnection.getInstance().getConnection();
         Statement stm = connection.createStatement();

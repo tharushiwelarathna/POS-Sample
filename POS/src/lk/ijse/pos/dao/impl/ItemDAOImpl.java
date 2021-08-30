@@ -11,7 +11,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 public class ItemDAOImpl implements ItemDAO {
-
+    @Override
     public boolean addItem(Item item) throws Exception {
         Connection connection = DBConnection.getInstance().getConnection();
         PreparedStatement pstm = connection.prepareStatement("INSERT INTO Item VALUES (?,?,?,?)");
@@ -21,13 +21,14 @@ public class ItemDAOImpl implements ItemDAO {
         pstm.setObject(4, item.getQtyOnHand());
         return (pstm.executeUpdate() > 0);
     }
-
+    @Override
     public boolean deleteItem(String code) throws Exception {
         Connection connection = DBConnection.getInstance().getConnection();
         PreparedStatement pstm = connection.prepareStatement("DELETE FROM Item WHERE code=?");
         pstm.setObject(1, code);
         return (pstm.executeUpdate() > 0);
     }
+    @Override
     public boolean updateQtyOnHand(String code, int qtyOnHand) throws Exception {
         Connection connection = DBConnection.getInstance().getConnection();
         PreparedStatement pstm = connection.prepareStatement("UPDATE Item SET qtyOnHand=? WHERE id=?");
@@ -37,7 +38,7 @@ public class ItemDAOImpl implements ItemDAO {
         return pstm.executeUpdate()>0;
     }
 
-
+    @Override
     public boolean updateItem(Item item) throws Exception {
         Connection connection = DBConnection.getInstance().getConnection();
         PreparedStatement pstm = connection.prepareStatement("UPDATE Item SET description=?, unitPrice=?, qtyOnHand=? WHERE code=?");
@@ -48,7 +49,7 @@ public class ItemDAOImpl implements ItemDAO {
         return (pstm.executeUpdate() > 0);
     }
 
-
+    @Override
     public Item searchItem(String code) throws Exception {
         Connection connection = DBConnection.getInstance().getConnection();
         PreparedStatement stm = connection.prepareStatement("SELECT * FROM Item where code=?");
@@ -62,7 +63,7 @@ public class ItemDAOImpl implements ItemDAO {
         }
         return null;
     }
-
+    @Override
     public ArrayList<Item> getAllItems() throws Exception {
         Connection connection = DBConnection.getInstance().getConnection();
         Statement stm = connection.createStatement();

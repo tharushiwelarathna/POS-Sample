@@ -20,6 +20,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import lk.ijse.pos.dao.CustomerDAO;
+import lk.ijse.pos.dao.ItemDAO;
+import lk.ijse.pos.dao.OrderDAO;
+import lk.ijse.pos.dao.OrderDetailDAO;
 import lk.ijse.pos.dao.impl.CustomerDAOImpl;
 import lk.ijse.pos.dao.impl.ItemDAOImpl;
 import lk.ijse.pos.dao.impl.OrderDAOImpl;
@@ -86,6 +90,11 @@ public class OrderFormController implements Initializable {
 
     private Connection connection;
 
+    private CustomerDAO customerDAO = new CustomerDAOImpl();
+    private ItemDAOImpl itemDAO = new ItemDAOImpl();
+    private OrderDAO orderDAO = new OrderDAOImpl();
+    private OrderDetailDAO orderDetailDAO = new OrderDetailDAOImpl();
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
@@ -127,7 +136,7 @@ public class OrderFormController implements Initializable {
                 }
 
                 try {
-                    CustomerDAOImpl customerDAO = new CustomerDAOImpl();
+//                    CustomerDAO customerDAO = new CustomerDAOImpl();
                     Customer customer = customerDAO.searchCustomer(customerID);
 
                     if (customer != null) {
@@ -158,7 +167,7 @@ public class OrderFormController implements Initializable {
                 }
 
                 try {
-                    ItemDAOImpl itemDAO = new ItemDAOImpl();
+//                    ItemDAOImpl itemDAO = new ItemDAOImpl();
                     Item item = itemDAO.searchItem(itemCode);
 
                     if (item != null) {
@@ -231,7 +240,7 @@ public class OrderFormController implements Initializable {
 
     private void loadAllData() throws SQLException {
 
-        CustomerDAOImpl customerDAO = new CustomerDAOImpl();
+//        CustomerDAO customerDAO = new CustomerDAOImpl();
         try {
             ArrayList<Customer> allCustomers = customerDAO.getAllCustomers();
             cmbCustomerID.getItems().removeAll(cmbCustomerID.getItems());
@@ -245,7 +254,7 @@ public class OrderFormController implements Initializable {
             e.printStackTrace();
         }
 
-        ItemDAOImpl itemDAO = new ItemDAOImpl();
+//        ItemDAO itemDAO = new ItemDAOImpl();
         try {
             ArrayList<Item> allItems = itemDAO.getAllItems();
             cmbItemCode.getItems().removeAll(cmbItemCode.getItems());
@@ -327,7 +336,7 @@ public class OrderFormController implements Initializable {
             connection.setAutoCommit(false);
 
             /*Add Order Record*/
-            OrderDAOImpl orderDAO = new OrderDAOImpl();
+//            OrderDAO orderDAO = new OrderDAOImpl();
             Orders orders = new Orders(txtOrderID.getText(),parseDate(txtOrderDate.getEditor().getText()),cmbCustomerID.getSelectionModel().getSelectedItem());
             boolean b1 = orderDAO.addOrder(orders);
             System.out.println("Order State :"+b1);
@@ -337,7 +346,7 @@ public class OrderFormController implements Initializable {
             }
 
             /*Add Order Details to the Table*/
-            OrderDetailDAOImpl orderDetailDAO = new OrderDetailDAOImpl();
+//            OrderDetailDAO orderDetailDAO = new OrderDetailDAOImpl();
             for (OrderDetailTM orderDetailTM : olOrderDetails) {
 
                 OrderDetails orderDetails = new OrderDetails(
@@ -354,15 +363,15 @@ public class OrderFormController implements Initializable {
                 }
 
                 int qtyOnHand = 0;
-                ItemDAOImpl itemDAO = new ItemDAOImpl();
+//                ItemDAO itemDAO = new ItemDAOImpl();
                 Item item = itemDAO.searchItem(orderDetailTM.getItemCode());
 
                 if (item!=null) {
                     qtyOnHand = item.getQtyOnHand();
                 }
 
-                ItemDAOImpl itemDAO1 = new ItemDAOImpl();
-                boolean b = itemDAO1.updateQtyOnHand(orderDetailTM.getItemCode(),qtyOnHand-orderDetailTM.getQty());
+//                ItemDAO itemDAO = new ItemDAOImpl();
+                boolean b = itemDAO.updateQtyOnHand(orderDetailTM.getItemCode(),qtyOnHand-orderDetailTM.getQty());
                 System.out.println("Item Qty Update State :"+b);
                 if (!b) {
                     connection.rollback();

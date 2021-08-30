@@ -46,11 +46,14 @@ public class ManageCustomerFormController implements Initializable {
     private JFXTextField txtCustomerAddress;
     @FXML
     private TableView<CustomerTM> tblCustomers;
+//property injection
+    private CustomerDAO customerDAO = new CustomerDAOImpl();
 
     private void loadAllCustomers() {
         try {
 
-            CustomerDAOImpl customerDAO = new CustomerDAOImpl();
+//            CustomerDAO customerDAO = new CustomerDAOImpl();
+
             ArrayList<Customer> allCustomers = customerDAO.getAllCustomers();
             ArrayList<CustomerTM> allCustomersForTable = new ArrayList<>();
 
@@ -114,7 +117,7 @@ public class ManageCustomerFormController implements Initializable {
 
             try {
 
-                CustomerDAOImpl customerDAO = new CustomerDAOImpl();
+//                CustomerDAO customerDAO = new CustomerDAOImpl();
                 boolean b = customerDAO.deleteCustomer(customerID);
 
                 if (b) {
@@ -151,8 +154,8 @@ public class ManageCustomerFormController implements Initializable {
         if (addnew) {
             try {
 
-                CustomerDAOImpl dao = new CustomerDAOImpl();
-                boolean b = dao.addCustomer(new Customer(txtCustomerId.getText(), txtCustomerName.getText(), txtCustomerAddress.getText()));
+//                CustomerDAO dao = new CustomerDAOImpl();
+                boolean b = customerDAO.addCustomer(new Customer(txtCustomerId.getText(), txtCustomerName.getText(), txtCustomerAddress.getText()));
                 if (b) {
                     loadAllCustomers();
                 } else {
@@ -165,8 +168,8 @@ public class ManageCustomerFormController implements Initializable {
         } else {
             try {
 
-                CustomerDAOImpl dao = new CustomerDAOImpl();
-                boolean b = dao.updateCustomer(new Customer(txtCustomerId.getText(), txtCustomerName.getText(), txtCustomerAddress.getText()));
+//                CustomerDAO dao = new CustomerDAOImpl();
+                boolean b = customerDAO.updateCustomer(new Customer(txtCustomerId.getText(), txtCustomerName.getText(), txtCustomerAddress.getText()));
                 if (b) {
                     loadAllCustomers();
                 } else {
