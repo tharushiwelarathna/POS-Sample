@@ -1,6 +1,6 @@
-package lk.ijse.pos.dao.impl;
+package lk.ijse.pos.dao.custom.impl;
 
-import lk.ijse.pos.dao.OrderDAO;
+import lk.ijse.pos.dao.custom.OrderDAO;
 import lk.ijse.pos.db.DBConnection;
 import lk.ijse.pos.model.Orders;
 

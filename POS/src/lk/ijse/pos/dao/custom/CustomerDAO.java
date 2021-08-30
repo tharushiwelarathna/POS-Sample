@@ -1,4 +1,4 @@
-package lk.ijse.pos.dao;
+package lk.ijse.pos.dao.custom;
 
 import lk.ijse.pos.model.Customer;
 

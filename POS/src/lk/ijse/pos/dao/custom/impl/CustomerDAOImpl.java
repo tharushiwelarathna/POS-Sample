@@ -1,6 +1,6 @@
-package lk.ijse.pos.dao.impl;
+package lk.ijse.pos.dao.custom.impl;
 
-import lk.ijse.pos.dao.CustomerDAO;
+import lk.ijse.pos.dao.custom.CustomerDAO;
 import lk.ijse.pos.db.DBConnection;
 import lk.ijse.pos.model.Customer;
 
@@ -12,7 +12,7 @@ public class CustomerDAOImpl implements CustomerDAO {
     public boolean addCustomer(Customer customer) throws Exception {
         Connection connection = DBConnection.getInstance().getConnection();
 
-        PreparedStatement pstm = connection.prepareStatement("INSERT INTO Customer VALUES (?,?,?,?)");
+        PreparedStatement pstm = connection.prepareStatement("INSERT INTO Customer VALUES (?,?,?)");
 
 
         pstm.setObject(1, customer.getcID());
