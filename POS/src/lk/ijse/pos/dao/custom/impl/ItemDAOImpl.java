@@ -2,16 +2,61 @@ package lk.ijse.pos.dao.custom.impl;
 
 import lk.ijse.pos.dao.CrudUtil;
 import lk.ijse.pos.dao.custom.ItemDAO;
-import lk.ijse.pos.db.DBConnection;
 import lk.ijse.pos.model.Item;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 public class ItemDAOImpl implements ItemDAO {
+    @Override
+    public boolean updateQtyOnHand(String code, int qtyOnHand) throws Exception {
+        String sql = "UPDATE Item SET qtyOnHand=? WHERE id=?";
+        return CrudUtil.executeUpdate(sql,qtyOnHand,code);
+    }
+
+    @Override
+    public boolean add(Item item) throws Exception {
+        String sql = "INSERT INTO Item VALUES (?,?,?,?)";
+        return CrudUtil.executeUpdate(sql,item.getCode(),item.getDescription(),item.getUnitPrice(),item.getQtyOnHand());
+
+    }
+
+    @Override
+    public boolean update(Item item) throws Exception {
+        String sql = "UPDATE Item SET description=?, unitprice=?, qtyonhand=? WHERE id=?";
+        return CrudUtil.executeUpdate(sql,item.getDescription(),item.getUnitPrice(),item.getQtyOnHand(),item.getCode());
+    }
+
+    @Override
+    public boolean delete(String id) throws Exception {
+        String sql = "DELETE FROM Item WHERE id=?";
+        return CrudUtil.executeUpdate(sql,id);
+    }
+
+    @Override
+    public Item search(String id) throws Exception {
+        String sql = "SELECT * FROM Item where id=?";
+        ResultSet rst = CrudUtil.executeQuery(sql,id);
+
+        if (rst.next()){
+            return new Item(rst.getString(1),rst.getString(2),rst.getBigDecimal(3),rst.getInt(4));
+        }
+        return null;
+    }
+
+    @Override
+    public ArrayList<Item> getAll() throws Exception {
+        String sql = "SELECT * FROM Item";
+        ResultSet rst = CrudUtil.executeQuery(sql);
+        ArrayList<Item> items = new ArrayList<>();
+        while (rst.next()){
+            Item item = new Item(rst.getString(1),rst.getString(2),rst.getBigDecimal(3),rst.getInt(4));
+            items.add(item);
+        }
+
+        return items;
+    }
+    /*
     @Override
     public boolean addItem(Item item) throws Exception {
 //        Connection connection = DBConnection.getInstance().getConnection();
@@ -104,4 +149,6 @@ public class ItemDAOImpl implements ItemDAO {
 
         return items;
     }
+
+     */
 }

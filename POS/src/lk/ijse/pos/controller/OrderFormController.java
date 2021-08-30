@@ -136,7 +136,7 @@ public class OrderFormController implements Initializable {
 
                 try {
 //                    CustomerDAO customerDAO = new CustomerDAOImpl();
-                    Customer customer = customerDAO.searchCustomer(customerID);
+                    Customer customer = customerDAO.search(customerID);
 
                     if (customer != null) {
                         txtCustomerName.setText(customer.getName());
@@ -167,7 +167,7 @@ public class OrderFormController implements Initializable {
 
                 try {
 //                    ItemDAOImpl itemDAO = new ItemDAOImpl();
-                    Item item = itemDAO.searchItem(itemCode);
+                    Item item = itemDAO.search(itemCode);
 
                     if (item != null) {
                         String description = item.getDescription();
@@ -241,7 +241,7 @@ public class OrderFormController implements Initializable {
 
 //        CustomerDAO customerDAO = new CustomerDAOImpl();
         try {
-            ArrayList<Customer> allCustomers = customerDAO.getAllCustomers();
+            ArrayList<Customer> allCustomers = customerDAO.getAll();
             cmbCustomerID.getItems().removeAll(cmbCustomerID.getItems());
 
             for (Customer customer: allCustomers){
@@ -255,7 +255,7 @@ public class OrderFormController implements Initializable {
 
 //        ItemDAO itemDAO = new ItemDAOImpl();
         try {
-            ArrayList<Item> allItems = itemDAO.getAllItems();
+            ArrayList<Item> allItems = itemDAO.getAll();
             cmbItemCode.getItems().removeAll(cmbItemCode.getItems());
 
             for (Item item: allItems){
@@ -337,7 +337,7 @@ public class OrderFormController implements Initializable {
             /*Add Order Record*/
 //            OrderDAO orderDAO = new OrderDAOImpl();
             Orders orders = new Orders(txtOrderID.getText(),parseDate(txtOrderDate.getEditor().getText()),cmbCustomerID.getSelectionModel().getSelectedItem());
-            boolean b1 = orderDAO.addOrder(orders);
+            boolean b1 = orderDAO.add(orders);
             System.out.println("Order State :"+b1);
             if (!b1) {
                 connection.rollback();
@@ -354,7 +354,7 @@ public class OrderFormController implements Initializable {
                         orderDetailTM.getQty(),
                         new BigDecimal(orderDetailTM.getUnitPrice()));
 
-                boolean b2 = orderDetailDAO.addOrderDetails(orderDetails);
+                boolean b2 = orderDetailDAO.add(orderDetails);
                 System.out.println("Order Details State :"+b2);
                 if (!b2) {
                     connection.rollback();
@@ -363,7 +363,7 @@ public class OrderFormController implements Initializable {
 
                 int qtyOnHand = 0;
 //                ItemDAO itemDAO = new ItemDAOImpl();
-                Item item = itemDAO.searchItem(orderDetailTM.getItemCode());
+                Item item = itemDAO.search(orderDetailTM.getItemCode());
 
                 if (item!=null) {
                     qtyOnHand = item.getQtyOnHand();
