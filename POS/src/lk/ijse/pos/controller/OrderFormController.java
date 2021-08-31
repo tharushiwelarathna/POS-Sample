@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import lk.ijse.pos.bo.CustomerBOImpl;
 import lk.ijse.pos.bo.ItemBOImpl;
+import lk.ijse.pos.bo.PurchaseOrderBOImpl;
 import lk.ijse.pos.dao.custom.CustomerDAO;
 import lk.ijse.pos.dao.custom.OrderDAO;
 import lk.ijse.pos.dao.custom.OrderDetailDAO;
@@ -93,6 +94,7 @@ public class OrderFormController implements Initializable {
 
     CustomerBOImpl customerBO = new CustomerBOImpl();
     ItemBOImpl itemBO=new ItemBOImpl();
+    private  PurchaseOrderBOImpl purchaseOrderBO = new PurchaseOrderBOImpl();
 
 
 
@@ -333,75 +335,93 @@ public class OrderFormController implements Initializable {
 
     @FXML
     private void btnPlaceOrderOnAction(ActionEvent event) {
-        try {
-            connection.setAutoCommit(false);
+
+       // try {
+
+            //connection.setAutoCommit(false);
 
             /*Add Order Record*/
 //            OrderDAO orderDAO = new OrderDAOImpl();
-            Orders orders = new Orders(txtOrderID.getText(),parseDate(txtOrderDate.getEditor().getText()),cmbCustomerID.getSelectionModel().getSelectedItem());
-            boolean b1 = orderDAO.add(orders);
-            System.out.println("Order State :"+b1);
-            if (!b1) {
-                connection.rollback();
-                return;
-            }
+//            Orders orders = new Orders(txtOrderID.getText(),parseDate(txtOrderDate.getEditor().getText()),cmbCustomerID.getSelectionModel().getSelectedItem());
+//            boolean b1 = orderDAO.add(orders);
+//            System.out.println("Order State :"+b1);
+//            if (!b1) {
+//                connection.rollback();
+//                return;
+//            }
 
             /*Add Order Details to the Table*/
 //            OrderDetailDAO orderDetailDAO = new OrderDetailDAOImpl();
+//            for (OrderDetailTM orderDetailTM : olOrderDetails) {
+//
+//                OrderDetails orderDetails = new OrderDetails(
+//                        txtOrderID.getText(),
+//                        orderDetailTM.getItemCode(),
+//                        orderDetailTM.getQty(),
+//                        new BigDecimal(orderDetailTM.getUnitPrice()));
+//
+//                boolean b2 = orderDetailDAO.add(orderDetails);
+//                System.out.println("Order Details State :"+b2);
+//                if (!b2) {
+//                    connection.rollback();
+//                    return;
+//                }
+
+//                int qtyOnHand = 0;
+////                ItemDAO itemDAO = new ItemDAOImpl();
+//                Item item = itemBO.searchItem(orderDetailTM.getItemCode());
+//
+//                if (item!=null) {
+//                    qtyOnHand = item.getQtyOnHand();
+//                }
+//
+////                ItemDAO itemDAO = new ItemDAOImpl();
+//                boolean b = itemBO.updateItemQtyOnHand(orderDetailTM.getItemCode(),qtyOnHand-orderDetailTM.getQty());
+//                System.out.println("Item Qty Update State :"+b);
+//                if (!b) {
+//                    connection.rollback();
+//                    return;
+//                }
+//
+//            }
+
+//            connection.commit();
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Order Placed", ButtonType.OK);
+//            alert.show();
+//
+//        } catch (SQLException ex) {
+//            try {
+//                connection.rollback();
+//            } catch (SQLException ex1) {
+//                Logger.getLogger(OrderFormController.class.getName()).log(Level.SEVERE, null, ex1);
+//            }
+//            Logger.getLogger(OrderFormController.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                connection.setAutoCommit(true);
+//            } catch (SQLException ex) {
+//                Logger.getLogger(OrderFormController.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+       //}
+
+        try {
+
+            Orders orders = new Orders(txtOrderID.getText(), parseDate(txtOrderDate.getEditor().getText()), cmbCustomerID.getSelectionModel().getSelectedItem());
+
+            ArrayList<OrderDetails> allOrderDetails = new ArrayList<>();
+
             for (OrderDetailTM orderDetailTM : olOrderDetails) {
-
-                OrderDetails orderDetails = new OrderDetails(
-                        txtOrderID.getText(),
-                        orderDetailTM.getItemCode(),
-                        orderDetailTM.getQty(),
-                        new BigDecimal(orderDetailTM.getUnitPrice()));
-
-                boolean b2 = orderDetailDAO.add(orderDetails);
-                System.out.println("Order Details State :"+b2);
-                if (!b2) {
-                    connection.rollback();
-                    return;
-                }
-
-                int qtyOnHand = 0;
-//                ItemDAO itemDAO = new ItemDAOImpl();
-                Item item = itemBO.searchItem(orderDetailTM.getItemCode());
-
-                if (item!=null) {
-                    qtyOnHand = item.getQtyOnHand();
-                }
-
-//                ItemDAO itemDAO = new ItemDAOImpl();
-                boolean b = itemBO.updateItemQtyOnHand(orderDetailTM.getItemCode(),qtyOnHand-orderDetailTM.getQty());
-                System.out.println("Item Qty Update State :"+b);
-                if (!b) {
-                    connection.rollback();
-                    return;
-                }
-
+                allOrderDetails.add(new OrderDetails(txtOrderID.getText(), orderDetailTM.getItemCode(), orderDetailTM.getQty(), new BigDecimal(orderDetailTM.getUnitPrice())));
             }
-
-            connection.commit();
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Order Placed", ButtonType.OK);
-            alert.show();
-
-        } catch (SQLException ex) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(OrderFormController.class.getName()).log(Level.SEVERE, null, ex1);
+            if (purchaseOrderBO.purchaseOrder(orders, allOrderDetails)) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Order Placed", ButtonType.OK);
+                alert.show();
             }
-            Logger.getLogger(OrderFormController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException ex) {
-                Logger.getLogger(OrderFormController.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
-
 
     }
 
