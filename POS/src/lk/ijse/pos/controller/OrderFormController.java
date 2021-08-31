@@ -20,6 +20,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import lk.ijse.pos.bo.CustomerBOImpl;
+import lk.ijse.pos.bo.ItemBOImpl;
 import lk.ijse.pos.dao.custom.CustomerDAO;
 import lk.ijse.pos.dao.custom.OrderDAO;
 import lk.ijse.pos.dao.custom.OrderDetailDAO;
@@ -89,10 +91,10 @@ public class OrderFormController implements Initializable {
 
     private Connection connection;
 
-    private CustomerDAO customerDAO = new CustomerDAOImpl();
-    private ItemDAOImpl itemDAO = new ItemDAOImpl();
-    private OrderDAO orderDAO = new OrderDAOImpl();
-    private OrderDetailDAO orderDetailDAO = new OrderDetailDAOImpl();
+    CustomerBOImpl customerBO = new CustomerBOImpl();
+    ItemBOImpl itemBO=new ItemBOImpl();
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -136,7 +138,7 @@ public class OrderFormController implements Initializable {
 
                 try {
 //                    CustomerDAO customerDAO = new CustomerDAOImpl();
-                    Customer customer = customerDAO.search(customerID);
+                    Customer customer = customerBO.searchCustomer(customerID);
 
                     if (customer != null) {
                         txtCustomerName.setText(customer.getName());
@@ -167,7 +169,7 @@ public class OrderFormController implements Initializable {
 
                 try {
 //                    ItemDAOImpl itemDAO = new ItemDAOImpl();
-                    Item item = itemDAO.search(itemCode);
+                    Item item = itemBO.searchItem(itemCode);
 
                     if (item != null) {
                         String description = item.getDescription();
@@ -241,7 +243,7 @@ public class OrderFormController implements Initializable {
 
 //        CustomerDAO customerDAO = new CustomerDAOImpl();
         try {
-            ArrayList<Customer> allCustomers = customerDAO.getAll();
+            ArrayList<Customer> allCustomers = customerBO.getAllCustomers();
             cmbCustomerID.getItems().removeAll(cmbCustomerID.getItems());
 
             for (Customer customer: allCustomers){
@@ -255,7 +257,7 @@ public class OrderFormController implements Initializable {
 
 //        ItemDAO itemDAO = new ItemDAOImpl();
         try {
-            ArrayList<Item> allItems = itemDAO.getAll();
+            ArrayList<Item> allItems = itemBO.getAllItems();
             cmbItemCode.getItems().removeAll(cmbItemCode.getItems());
 
             for (Item item: allItems){
@@ -363,14 +365,14 @@ public class OrderFormController implements Initializable {
 
                 int qtyOnHand = 0;
 //                ItemDAO itemDAO = new ItemDAOImpl();
-                Item item = itemDAO.search(orderDetailTM.getItemCode());
+                Item item = itemBO.searchItem(orderDetailTM.getItemCode());
 
                 if (item!=null) {
                     qtyOnHand = item.getQtyOnHand();
                 }
 
 //                ItemDAO itemDAO = new ItemDAOImpl();
-                boolean b = itemDAO.updateQtyOnHand(orderDetailTM.getItemCode(),qtyOnHand-orderDetailTM.getQty());
+                boolean b = itemBO.updateItemQtyOnHand(orderDetailTM.getItemCode(),qtyOnHand-orderDetailTM.getQty());
                 System.out.println("Item Qty Update State :"+b);
                 if (!b) {
                     connection.rollback();
