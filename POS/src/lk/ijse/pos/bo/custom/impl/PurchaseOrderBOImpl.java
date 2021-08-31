@@ -2,6 +2,7 @@ package lk.ijse.pos.bo.custom.impl;
 
 import lk.ijse.pos.bo.custom.PurchaseOrderBO;
 import lk.ijse.pos.controller.OrderFormController;
+import lk.ijse.pos.dao.DAOFactory;
 import lk.ijse.pos.dao.custom.CustomerDAO;
 import lk.ijse.pos.dao.custom.ItemDAO;
 import lk.ijse.pos.dao.custom.OrderDAO;
@@ -23,10 +24,14 @@ import java.util.ArrayList;
 
 public class PurchaseOrderBOImpl implements PurchaseOrderBO {
 
-    private  CustomerDAO customerDAO = new CustomerDAOImpl();
-    private  ItemDAO itemDAO = new ItemDAOImpl();
-    private  OrderDAO orderDAO = new OrderDAOImpl();
-    private OrderDetailDAO orderDetailDAO = new OrderDetailDAOImpl();
+
+//    private  ItemDAO itemDAO = new ItemDAOImpl();
+//    private  OrderDAO orderDAO = new OrderDAOImpl();
+//    private OrderDetailDAO orderDetailDAO = new OrderDetailDAOImpl();
+
+    private final ItemDAO itemDAO = (ItemDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.ITEM);
+    private final OrderDAO orderDAO = (OrderDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.ORDER);
+    private final OrderDetailDAO orderDetailDAO = (OrderDetailDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.ORDERDETAIL);
 
     @Override
     public boolean purchaseOrder(Orders orders, ArrayList<OrderDetails> orderDetails) throws Exception {
