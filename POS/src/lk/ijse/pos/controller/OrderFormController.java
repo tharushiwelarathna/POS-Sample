@@ -20,16 +20,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import lk.ijse.pos.bo.CustomerBOImpl;
-import lk.ijse.pos.bo.ItemBOImpl;
-import lk.ijse.pos.bo.PurchaseOrderBOImpl;
-import lk.ijse.pos.dao.custom.CustomerDAO;
-import lk.ijse.pos.dao.custom.OrderDAO;
-import lk.ijse.pos.dao.custom.OrderDetailDAO;
-import lk.ijse.pos.dao.custom.impl.CustomerDAOImpl;
-import lk.ijse.pos.dao.custom.impl.ItemDAOImpl;
-import lk.ijse.pos.dao.custom.impl.OrderDAOImpl;
-import lk.ijse.pos.dao.custom.impl.OrderDetailDAOImpl;
+import lk.ijse.pos.bo.custom.impl.CustomerBOImpl;
+import lk.ijse.pos.bo.custom.CustomerBO;
+import lk.ijse.pos.bo.custom.ItemBO;
+import lk.ijse.pos.bo.custom.PurchaseOrderBO;
+import lk.ijse.pos.bo.custom.impl.ItemBOImpl;
+import lk.ijse.pos.bo.custom.impl.PurchaseOrderBOImpl;
 import lk.ijse.pos.db.DBConnection;
 import lk.ijse.pos.model.Customer;
 import lk.ijse.pos.model.Item;
@@ -92,9 +88,9 @@ public class OrderFormController implements Initializable {
 
     private Connection connection;
 
-    CustomerBOImpl customerBO = new CustomerBOImpl();
-    ItemBOImpl itemBO=new ItemBOImpl();
-    private  PurchaseOrderBOImpl purchaseOrderBO = new PurchaseOrderBOImpl();
+   private CustomerBO customerBO = new CustomerBOImpl();
+  private   ItemBO itemBO=new ItemBOImpl();
+    private PurchaseOrderBO purchaseOrderBO = new PurchaseOrderBOImpl();
 
 
 

@@ -1,5 +1,6 @@
-package lk.ijse.pos.bo;
+package lk.ijse.pos.bo.custom.impl;
 
+import lk.ijse.pos.bo.custom.PurchaseOrderBO;
 import lk.ijse.pos.controller.OrderFormController;
 import lk.ijse.pos.dao.custom.CustomerDAO;
 import lk.ijse.pos.dao.custom.ItemDAO;
@@ -17,18 +18,17 @@ import lk.ijse.pos.model.Orders;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
-public class PurchaseOrderBOImpl {
+
+public class PurchaseOrderBOImpl implements PurchaseOrderBO {
 
     private  CustomerDAO customerDAO = new CustomerDAOImpl();
     private  ItemDAO itemDAO = new ItemDAOImpl();
     private  OrderDAO orderDAO = new OrderDAOImpl();
     private OrderDetailDAO orderDetailDAO = new OrderDetailDAOImpl();
 
-
+    @Override
     public boolean purchaseOrder(Orders orders, ArrayList<OrderDetails> orderDetails) throws Exception {
         Connection connection = DBConnection.getInstance().getConnection();
         try {
