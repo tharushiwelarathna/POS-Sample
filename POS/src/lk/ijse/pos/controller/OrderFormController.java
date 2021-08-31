@@ -20,6 +20,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import lk.ijse.pos.bo.BOFactory;
 import lk.ijse.pos.bo.custom.impl.CustomerBOImpl;
 import lk.ijse.pos.bo.custom.CustomerBO;
 import lk.ijse.pos.bo.custom.ItemBO;
@@ -88,10 +89,17 @@ public class OrderFormController implements Initializable {
 
     private Connection connection;
 
-   private CustomerBO customerBO = new CustomerBOImpl();
-  private   ItemBO itemBO=new ItemBOImpl();
-    private PurchaseOrderBO purchaseOrderBO = new PurchaseOrderBOImpl();
+//   private CustomerBO customerBO = new CustomerBOImpl();
+//  private   ItemBO itemBO=new ItemBOImpl();
+//    private PurchaseOrderBO purchaseOrderBO = new PurchaseOrderBOImpl();
 
+
+    PurchaseOrderBO purchaseOrderBO= (PurchaseOrderBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.ORDER);
+
+
+    CustomerBO customerBO= (CustomerBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.CUSTOMER);
+
+    ItemBO itemBO= (ItemBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.ITEM);
 
 
     @Override

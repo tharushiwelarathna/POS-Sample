@@ -16,6 +16,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import lk.ijse.pos.AppInitializer;
+import lk.ijse.pos.bo.BOFactory;
 import lk.ijse.pos.bo.custom.ItemBO;
 import lk.ijse.pos.bo.custom.impl.ItemBOImpl;
 import lk.ijse.pos.model.Item;
@@ -51,7 +52,9 @@ public class ManageItemFormController implements Initializable {
     private TableView<ItemTM> tblItems;
 
     private boolean addNew = true;
- private ItemBO itemBO=new ItemBOImpl();
+// private ItemBO itemBO=new ItemBOImpl();
+   ItemBO itemBO= (ItemBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.ITEM);
+
 
     private void loadAllItems() {
 
