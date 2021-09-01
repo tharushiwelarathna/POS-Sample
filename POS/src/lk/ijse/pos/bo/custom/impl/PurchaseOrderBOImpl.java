@@ -3,23 +3,21 @@ package lk.ijse.pos.bo.custom.impl;
 import lk.ijse.pos.bo.custom.PurchaseOrderBO;
 import lk.ijse.pos.controller.OrderFormController;
 import lk.ijse.pos.dao.DAOFactory;
-import lk.ijse.pos.dao.custom.CustomerDAO;
 import lk.ijse.pos.dao.custom.ItemDAO;
 import lk.ijse.pos.dao.custom.OrderDAO;
 import lk.ijse.pos.dao.custom.OrderDetailDAO;
-import lk.ijse.pos.dao.custom.impl.CustomerDAOImpl;
-import lk.ijse.pos.dao.custom.impl.ItemDAOImpl;
-import lk.ijse.pos.dao.custom.impl.OrderDAOImpl;
-import lk.ijse.pos.dao.custom.impl.OrderDetailDAOImpl;
 import lk.ijse.pos.db.DBConnection;
-import lk.ijse.pos.model.Item;
-import lk.ijse.pos.model.OrderDetails;
-import lk.ijse.pos.model.Orders;
+import lk.ijse.pos.dto.OrderDetailsDTO;
+import lk.ijse.pos.dto.OrdersDTO;
+import lk.ijse.pos.entity.Item;
+import lk.ijse.pos.entity.OrderDetails;
+import lk.ijse.pos.entity.Orders;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class PurchaseOrderBOImpl implements PurchaseOrderBO {
@@ -34,19 +32,24 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO {
     private final OrderDetailDAO orderDetailDAO = (OrderDetailDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.ORDERDETAIL);
 
     @Override
-    public boolean purchaseOrder(Orders orders, ArrayList<OrderDetails> orderDetails) throws Exception {
-        Connection connection = DBConnection.getInstance().getConnection();
+    public boolean purchaseOrder(OrdersDTO ordersDTO) throws Exception {
+        Connection connection= DBConnection.getInstance().getConnection();
+
         try {
 
             connection.setAutoCommit(false);
-            boolean b1 = orderDAO.add(orders);
+
+            Orders order=new Orders(ordersDTO.getId(),ordersDTO.getDate(),ordersDTO.getCustomerId());
+
+            boolean b1 = orderDAO.add(order);
             if (!b1) {
                 connection.rollback();
                 return false;
             }
 
-            for (OrderDetails orderDetail: orderDetails) {
-                boolean b2 = orderDetailDAO.add(orderDetail);
+            for (OrderDetailsDTO orderDetail : ordersDTO.getOrderDetails()) {
+                OrderDetails orderDetails=new OrderDetails(orderDetail.getOrderId(),orderDetail.getItemCode(),orderDetail.getQty(),orderDetail.getUnitPrice());
+                boolean b2 = orderDetailDAO.add(orderDetails);
                 if (!b2) {
                     connection.rollback();
                     return false;
@@ -70,23 +73,24 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBO {
             }
 
             connection.commit();
-            return true;
 
         } catch (SQLException ex) {
             try {
                 connection.rollback();
             } catch (SQLException ex1) {
-                throw new Exception(ex1);
+                Logger.getLogger(OrderFormController.class.getName()).log(Level.SEVERE, null, ex1);
             }
-            throw new Exception(ex);
+            Logger.getLogger(OrderFormController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception e) {
-            throw new Exception(e);
+            e.printStackTrace();
         } finally {
             try {
                 connection.setAutoCommit(true);
+                return true;
             } catch (SQLException ex) {
-                throw new Exception(ex);
+                Logger.getLogger(OrderFormController.class.getName()).log(Level.SEVERE, null, ex);
             }
+            return true;
         }
 
         }

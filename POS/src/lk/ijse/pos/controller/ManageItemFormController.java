@@ -18,8 +18,8 @@ import javafx.stage.Stage;
 import lk.ijse.pos.AppInitializer;
 import lk.ijse.pos.bo.BOFactory;
 import lk.ijse.pos.bo.custom.ItemBO;
-import lk.ijse.pos.bo.custom.impl.ItemBOImpl;
-import lk.ijse.pos.model.Item;
+import lk.ijse.pos.dto.ItemDTO;
+import lk.ijse.pos.entity.Item;
 import lk.ijse.pos.view.tblmodel.ItemTM;
 
 
@@ -61,12 +61,12 @@ public class ManageItemFormController implements Initializable {
         try {
             /*Get All Items*/
 //            ItemDAO itemDAO = new ItemDAOImpl();
-            ArrayList<Item> allItems = itemBO.getAllItems();
+            ArrayList<ItemDTO> allItems = itemBO.getAllItems();
 
             /*create a ItemTM type list*/
             ArrayList<ItemTM> allItemsForTable = new ArrayList<>();
 
-            for (Item i : allItems) {
+            for (ItemDTO i : allItems) {
                 allItemsForTable.add(new ItemTM(i.getCode(), i.getDescription(), i.getUnitPrice(), i.getQtyOnHand()));
             }
 
@@ -145,7 +145,7 @@ public class ManageItemFormController implements Initializable {
 
                 /*Add Item*/
 //                ItemDAO itemDAO = new ItemDAOImpl();
-                Item item = new Item(txtItemCode.getText(), txtDescription.getText(), new BigDecimal(txtUnitPrice.getText()), Integer.parseInt(txtQty.getText()));
+                ItemDTO item = new ItemDTO(txtItemCode.getText(), txtDescription.getText(), new BigDecimal(txtUnitPrice.getText()), Integer.parseInt(txtQty.getText()));
                 boolean b = itemBO.addItem(item);
                 if (b) {
                     loadAllItems();
@@ -162,7 +162,7 @@ public class ManageItemFormController implements Initializable {
             try {
                 /*Update Item*/
 //                ItemDAO dao = new ItemDAOImpl();
-                Item item = new Item(txtItemCode.getText(), txtDescription.getText(), new BigDecimal(txtUnitPrice.getText()), Integer.parseInt(txtQty.getText()));
+                ItemDTO item = new ItemDTO(txtItemCode.getText(), txtDescription.getText(), new BigDecimal(txtUnitPrice.getText()), Integer.parseInt(txtQty.getText()));
                 boolean b = itemBO.addItem(item);
 
                 if (b) {

@@ -17,9 +17,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import lk.ijse.pos.AppInitializer;
 import lk.ijse.pos.bo.BOFactory;
-import lk.ijse.pos.bo.custom.impl.CustomerBOImpl;
 import lk.ijse.pos.bo.custom.CustomerBO;
-import lk.ijse.pos.model.Customer;
+import lk.ijse.pos.dto.CustomerDTO;
+import lk.ijse.pos.entity.Customer;
 import lk.ijse.pos.view.tblmodel.CustomerTM;
 
 import java.net.URL;
@@ -61,10 +61,10 @@ public class ManageCustomerFormController implements Initializable {
 
 //            CustomerDAO customerDAO = new CustomerDAOImpl();
 
-            ArrayList<Customer> allCustomers = customerBO.getAllCustomers();
+            ArrayList<CustomerDTO> allCustomers = customerBO.getAllCustomers();
             ArrayList<CustomerTM> allCustomersForTable = new ArrayList<>();
 
-            for (Customer customer : allCustomers) {
+            for (CustomerDTO customer : allCustomers) {
                 allCustomersForTable.add(new CustomerTM(customer.getcID(), customer.getName(), customer.getAddress()));
             }
             ObservableList<CustomerTM> olCustomers = FXCollections.observableArrayList(allCustomersForTable);
@@ -162,7 +162,7 @@ public class ManageCustomerFormController implements Initializable {
             try {
 
 //                CustomerDAO dao = new CustomerDAOImpl();
-                boolean b = customerBO.addCustomer(new Customer(txtCustomerId.getText(), txtCustomerName.getText(), txtCustomerAddress.getText()));
+                boolean b = customerBO.addCustomer(new CustomerDTO(txtCustomerId.getText(), txtCustomerName.getText(), txtCustomerAddress.getText()));
                 if (b) {
                     loadAllCustomers();
                 } else {
@@ -176,7 +176,7 @@ public class ManageCustomerFormController implements Initializable {
             try {
 
 //                CustomerDAO dao = new CustomerDAOImpl();
-                boolean b = customerBO.updateCustomer(new Customer(txtCustomerId.getText(), txtCustomerName.getText(), txtCustomerAddress.getText()));
+                boolean b = customerBO.updateCustomer(new CustomerDTO(txtCustomerId.getText(), txtCustomerName.getText(), txtCustomerAddress.getText()));
                 if (b) {
                     loadAllCustomers();
                 } else {
